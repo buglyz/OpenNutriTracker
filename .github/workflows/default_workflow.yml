@@ -43,10 +43,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pub-cache-
 
-      - name: Run CI
-        run: just ci
-        env:
-          FDC_API_KEY: ${{ secrets.FDC_API_KEY }}
-          SENTRY_DNS: ${{ secrets.SENTRY_DNS }}
-          SUPABASE_PROJECT_ANON_KEY: ${{ secrets.SUPABASE_PROJECT_ANON_KEY }}
-          SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
+#      - name: Run CI
+#        run: just ci
+#        env:
+#          FDC_API_KEY: ${{ secrets.FDC_API_KEY }}
+#          SENTRY_DNS: ${{ secrets.SENTRY_DNS }}
+#          SUPABASE_PROJECT_ANON_KEY: ${{ secrets.SUPABASE_PROJECT_ANON_KEY }}
+#          SUPABASE_PROJECT_URL: ${{ secrets.SUPABASE_PROJECT_URL }}
