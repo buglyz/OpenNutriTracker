@@ -95,10 +95,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   /// Returns the user's weight in kg or lbs based on the user's config
   String getDisplayWeight(UserEntity user, bool usesImperialUnits) {
-    if (usesImperialUnits) {
-      return UnitCalc.kgToLbs(user.weightKG).toStringAsFixed(0);
-    } else {
-      return user.weightKG.roundToDouble().toStringAsFixed(0);
+    final displayWeight = usesImperialUnits
+        ? UnitCalc.kgToLbs(user.weightKG)
+        : user.weightKG;
+
+    return _formatWeight(displayWeight);
+  }
+
+  /// Format weight with one decimal precision when needed, without trailing `.0`.
+  String _formatWeight(double weight) {
+    final roundedToOneDecimal = double.parse(weight.toStringAsFixed(1));
+    if (roundedToOneDecimal == roundedToOneDecimal.roundToDouble()) {
+      return roundedToOneDecimal.toStringAsFixed(0);
     }
+    return roundedToOneDecimal.toStringAsFixed(1);
   }
 }
