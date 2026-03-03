@@ -1,16 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:horizontal_picker/horizontal_picker.dart';
+import 'package:opennutritracker/features/profile/presentation/utils/profile_picker_bounds.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
 class SetHeightDialog extends StatefulWidget {
-  static const _heightRangeCM = 100.0;
-  static const _heightRangeFt = 10.0;
-  static const _minHeightCm = 1.0;
-  static const _minHeightFt = 1.0;
-  static const _heightRangeFt = 10.0;
-
   final double userHeight;
   final bool usesImperialUnits;
 
@@ -35,18 +28,10 @@ class _SetHeightDialogState extends State<SetHeightDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final minHeight = widget.usesImperialUnits
-        ? max(
-            SetHeightDialog._minHeightFt,
-            widget.userHeight - SetHeightDialog._heightRangeFt,
-          )
-        : max(
-            SetHeightDialog._minHeightCm,
-            widget.userHeight - SetHeightDialog._heightRangeCM,
-          );
-    final maxHeight = widget.usesImperialUnits
-        ? widget.userHeight + SetHeightDialog._heightRangeFt
-        : widget.userHeight + SetHeightDialog._heightRangeCM;
+    final minHeight =
+        minSelectableHeight(widget.userHeight, widget.usesImperialUnits);
+    final maxHeight =
+        maxSelectableHeight(widget.userHeight, widget.usesImperialUnits);
 
     return AlertDialog(
       title: Text(S.of(context).selectHeightDialogLabel),
@@ -82,7 +67,10 @@ class _SetHeightDialogState extends State<SetHeightDialog> {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pop(context, max(minHeight, selectedHeight));
+            Navigator.pop(
+              context,
+              clampHeightSelection(selectedHeight, minHeight),
+            );
           },
           child: Text(S.of(context).dialogOKLabel),
         ),

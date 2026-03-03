@@ -1,15 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:horizontal_picker/horizontal_picker.dart';
+import 'package:opennutritracker/features/profile/presentation/utils/profile_picker_bounds.dart';
 import 'package:opennutritracker/generated/l10n.dart';
 
 class SetWeightDialog extends StatefulWidget {
-  static const weightRangeKg = 50.0;
-  static const weightRangeLbs = 100.0;
-  static const minWeightKg = 1.0;
-  static const minWeightLbs = 1.0;
-
   final double userWeight;
   final bool usesImperialUnits;
 
@@ -34,18 +28,10 @@ class _SetWeightDialogState extends State<SetWeightDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final minWeight = widget.usesImperialUnits
-        ? max(
-            SetWeightDialog.minWeightLbs,
-            widget.userWeight - SetWeightDialog.weightRangeLbs,
-          )
-        : max(
-            SetWeightDialog.minWeightKg,
-            widget.userWeight - SetWeightDialog.weightRangeKg,
-          );
-    final maxWeight = widget.usesImperialUnits
-        ? widget.userWeight + SetWeightDialog.weightRangeLbs
-        : widget.userWeight + SetWeightDialog.weightRangeKg;
+    final minWeight =
+        minSelectableWeight(widget.userWeight, widget.usesImperialUnits);
+    final maxWeight =
+        maxSelectableWeight(widget.userWeight, widget.usesImperialUnits);
 
     return AlertDialog(
       title: Text(S.of(context).selectWeightDialogLabel),
@@ -82,7 +68,10 @@ class _SetWeightDialogState extends State<SetWeightDialog> {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pop(context, max(minWeight, selectedWeight));
+            Navigator.pop(
+              context,
+              clampWeightSelection(selectedWeight, minWeight),
+            );
           },
           child: Text(S.of(context).dialogOKLabel),
         ),
