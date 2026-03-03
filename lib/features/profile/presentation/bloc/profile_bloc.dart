@@ -13,6 +13,7 @@ import 'package:opennutritracker/core/utils/locator.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/calendar_day_bloc.dart';
 import 'package:opennutritracker/features/diary/presentation/bloc/diary_bloc.dart';
 import 'package:opennutritracker/features/home/presentation/bloc/home_bloc.dart';
+import 'package:opennutritracker/features/profile/presentation/utils/profile_display_format.dart';
 
 part 'profile_event.dart';
 
@@ -99,15 +100,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         ? UnitCalc.kgToLbs(user.weightKG)
         : user.weightKG;
 
-    return _formatWeight(displayWeight);
-  }
-
-  /// Format weight with one decimal precision when needed, without trailing `.0`.
-  String _formatWeight(double weight) {
-    final roundedToOneDecimal = double.parse(weight.toStringAsFixed(1));
-    if (roundedToOneDecimal == roundedToOneDecimal.roundToDouble()) {
-      return roundedToOneDecimal.toStringAsFixed(0);
-    }
-    return roundedToOneDecimal.toStringAsFixed(1);
+    return formatProfileWeight(displayWeight);
   }
 }
