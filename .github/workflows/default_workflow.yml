@@ -44,8 +44,8 @@ jobs:
       - name: Install Pub Dependencies
         run: flutter pub get
 
-      - name: Build with secrets
-        run: flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Generate code
+        run: dart run build_runner build --delete-conflicting-outputs
         env:
           FDC_API_KEY: ${{ secrets.FDC_API_KEY }}
           SENTRY_DNS: ${{ secrets.SENTRY_DNS }}
@@ -57,19 +57,6 @@ jobs:
 
       - name: Run Tests
         run: flutter test
-
-      - name: Decode Android keystore
-        run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
-
-      - name: Create key.properties
-        run: |
-          cat > android/key.properties <<EOF
-          storePassword=${{ secrets.ANDROID_STORE_PASSWORD }}
-          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
-          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
-          storeFile=app/upload-keystore.jks
-          EOF
 
       - name: Build Android APK
         run: flutter build apk --release
