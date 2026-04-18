@@ -14,7 +14,9 @@ double minSelectableHeight(double userHeight, bool usesImperialUnits) {
 
 double maxSelectableHeight(double userHeight, bool usesImperialUnits) {
   final range = usesImperialUnits ? _heightRangeFt : _heightRangeCm;
-  return userHeight + range;
+  final clampedMin = minSelectableHeight(userHeight, usesImperialUnits);
+  final rawMax = userHeight + range;
+  return max(clampedMin + range, rawMax);
 }
 
 double clampHeightSelection(double selectedHeight, double minHeight) {
@@ -28,7 +30,9 @@ double minSelectableWeight(double userWeight, bool usesImperialUnits) {
 
 double maxSelectableWeight(double userWeight, bool usesImperialUnits) {
   final range = usesImperialUnits ? _weightRangeLbs : _weightRangeKg;
-  return userWeight + range;
+  final minWeight = minSelectableWeight(userWeight, usesImperialUnits);
+  final candidateMaxWeight = userWeight + range;
+  return max(minWeight + range, candidateMaxWeight);
 }
 
 double clampWeightSelection(double selectedWeight, double minWeight) {
